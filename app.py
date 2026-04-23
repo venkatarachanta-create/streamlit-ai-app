@@ -1,19 +1,24 @@
 import streamlit as st
 from textblob import TextBlob
+import nltk
 
-# Title
-st.title("AI Text Analyzer")
+# Run only once (cached)
+@st.cache_resource
+def load_nltk():
+    nltk.download('punkt')
 
-# Input box
+load_nltk()
+
+# UI
+st.title("🤖 AI Text Analyzer")
+
 text = st.text_area("Enter your text:")
 
-# Button
 if st.button("Analyze"):
     if text:
         blob = TextBlob(text)
         sentiment = blob.sentiment.polarity
-        
-        # Result
+
         if sentiment > 0:
             st.success("Positive 😊")
         elif sentiment < 0:
@@ -21,6 +26,4 @@ if st.button("Analyze"):
         else:
             st.info("Neutral 😐")
 
-        st.write(f"Sentiment Score: {sentiment}")
-    else:
-        st.warning("Please enter some text!")
+        st.write(f"Score: {sentiment}")
